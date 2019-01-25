@@ -13,6 +13,7 @@ class Installation(db.Model):
     last_update  = db.Column(db.DateTime(timezone=True))
     last_used    = db.Column(db.DateTime(timezone=True))
     hit_count    = db.Column(db.Integer)
+    enabled      = db.Column(db.Boolean, default=True)
 
     def __init__(self, install_id, sub_id=None, api_key=None):
         self.install_id = install_id

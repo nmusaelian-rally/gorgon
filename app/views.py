@@ -15,7 +15,7 @@ HOOK_SECRET_KEY = os.environb[b'HOOK_SECRET_KEY']
 
 @app.route('/home', methods=['GET'])
 def home():
-    pass
+    return "home"
 
 @app.route('/setup', methods=['GET','POST'])
 def setup():

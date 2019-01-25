@@ -2,16 +2,6 @@
 from app.models import Installation
 from pyral  import Rally
 
-def validInstallationParms(install_id, sub_id, api_key):
-    #app_installation = Installation.query.get(install_id)
-    app_installation = Installation.query.filter_by(install_id=int(install_id)).all()
-    if not app_installation:
-        return False, "No record of the installed handlers for %s" % install_id
-    if not sub_id or not api_key:
-        return False, "Both Subscription ID and Api Key values were not specified"
-    status, message = validRallyIdent(api_key, sub_id)
-    return status, message
-
 
 def validRallyIdent(api_key, sub_id):
     try:
