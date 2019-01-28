@@ -1,7 +1,7 @@
 import os
 from flask import render_template
 from app.models import Installation
-from inshelper import validRallyIdent
+from helpers.rally import validRallyIdent
 import datetime
 
 
