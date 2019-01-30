@@ -7,10 +7,6 @@ from handlers.gh_handler  import handleGithubAppPost
 from helpers.signature    import validateGithubSignature
 from handlers.setup       import setupApp
 
-# @handlers.before_first_request()
-# def beVeryAfraid():
-#     pass
-
 HOOK_SECRET_KEY = os.environb[b'HOOK_SECRET_KEY']
 
 @app.route('/home', methods=['GET'])
@@ -23,8 +19,11 @@ def setup():
 
 @app.route('/', methods=['POST'])
 def githubAppPost():
+    print("I am in the githubAppPost method ...")
     if not validateGithubSignature(HOOK_SECRET_KEY, request):
+        print("Unable to validate the request using the HOOK_SECRET_KEY of [%s]" % HOOK_SECRET_KEY)
         return "403 Request not authorized"
+    print("the Github post message was validated ...")
     return handleGithubAppPost(db, request)
 
 #

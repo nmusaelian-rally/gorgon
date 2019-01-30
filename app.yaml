@@ -1,0 +1,17 @@
+runtime: python37
+
+api_version: 1
+threadsafe: true
+
+handlers:
+  - url: /.*
+    script: main.py
+
+#[START env]
+env_variables:
+    #CLOUD_STORAGE_BUCKET: khet-online-storage
+    HOOK_SECRET_KEY: Bruichladdich
+    DATABASE_URL: postgresql://pairing:pairing@localhost:5432/installs
+    PYTHONUNBUFFERED: 1
+    DARK_STAR_WOMBAT: guano-provider
+#[END env]
