@@ -15,6 +15,7 @@ def home():
 
 @app.route('/setup', methods=['GET','POST'])
 def setup():
+    print("I am about to call the  setupApp method ...")
     return setupApp(db, request)
 
 @app.route('/', methods=['POST'])

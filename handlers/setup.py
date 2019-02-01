@@ -7,6 +7,7 @@ import datetime
 
 def setupApp(db, request):
     # https://ef151b60.ngrok.io/setup?installation_id=575440&setup_action=update
+    print("in setupApp method, method = %s" % request.method)
     if request.method == 'GET':
         install_id = request.args.get('installation_id')
         app_installation = Installation.query.filter_by(install_id=int(install_id)).all()
@@ -29,7 +30,7 @@ def setupApp(db, request):
         action = 'install'
 
         install_id, sub_id, api_key = request.form['install_id'], request.form['sub_id'], request.form['api_key']
-        #print("IN SETUP.PY: %s, %s, %s" %(install_id, sub_id, api_key))
+        print("IN setupApp for POST: %s, %s, %s" %(install_id, sub_id, api_key))
 
         installation = Installation.query.filter_by(install_id=int(install_id))
         if not installation:

@@ -16,6 +16,12 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 MODE = 'dev'
 db = SQLAlchemy(app)
 
+try:
+    db.session.execute('SELECT 1')
+    print("got a result from simple query of SELECT 1 ...")
+except Exception as ex:
+    print("problem with db.execute", ex)
+
 
 
 

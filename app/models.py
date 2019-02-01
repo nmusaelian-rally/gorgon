@@ -1,6 +1,7 @@
 from app.app import db
 import datetime
 
+
 class Installation(db.Model):
     __tablename__ = 'installation'
 
@@ -24,3 +25,4 @@ class Installation(db.Model):
 
     def __repr__(self):
         return '<id {}>'.format(self.id)
+
