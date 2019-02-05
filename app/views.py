@@ -1,7 +1,7 @@
 
 import os
-from app.app import app,db
-from flask import Flask, request, render_template
+from app.app import app, db
+from flask import request
 
 from handlers.gh_handler  import handleGithubAppPost
 from helpers.signature    import validateGithubSignature
@@ -15,7 +15,7 @@ def home():
 
 @app.route('/setup', methods=['GET','POST'])
 def setup():
-    print("I am about to call the  setupApp method ...")
+    print("calling the setupApp method ...")
     return setupApp(db, request)
 
 @app.route('/', methods=['POST'])
@@ -25,7 +25,13 @@ def githubAppPost():
         print("Unable to validate the request using the HOOK_SECRET_KEY of [%s]" % HOOK_SECRET_KEY)
         return "403 Request not authorized"
     print("the Github post message was validated ...")
-    return handleGithubAppPost(db, request)
+    return handleGithubAppPost(db, request, app.payload_queue)
+
+@app.route('/quit', methods=['POST'])
+def quitApp():
+    if validateGithubSignature(HOOK_SECRET_KEY, request):
+        app.payload_queue.put("HALT - No more work 4U")
+    return "App work is done, signing off..."
 
 #
 # @app.route('/<name>')

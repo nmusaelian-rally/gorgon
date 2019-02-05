@@ -10,13 +10,13 @@ def read_config(config_path):
     return conf
 
 def kafka():
-    config = read_config('helpers/kafka_config.yml')
+    config     = read_config('helpers/kafka_config.yml')
     kafka_home = config.get('KafkaHome')
     topic_name = config.get('TopicName')
-    hosts = config.get('Hosts', 'localhost:9092')
+    hosts      = config.get('Hosts', 'localhost:9092')
     replication_factor = config.get('Replication', 1)
     partitions = config.get('Partitions', 1)
-    zookeeper = config.get('Zookeeper', 'localhost:2181')
+    zookeeper  = config.get('Zookeeper', 'localhost:2181')
     kafka_client = KafkaClient(hosts=hosts)
     cmd = "%s/%s/bin/kafka-topics.sh" % (os.environ['HOME'], kafka_home)
 

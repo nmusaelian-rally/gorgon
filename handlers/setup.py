@@ -1,8 +1,8 @@
-import os
+import datetime
+
 from flask import render_template
 from app.models import Installation
 from helpers.rally import validRallyIdent
-import datetime
 
 
 def setupApp(db, request):

@@ -1,20 +1,23 @@
-from flask import render_template
-from app.models import Installation
 import datetime
 import json
+import time
+from helpers.chronuti import TimeStamp
 from pprint import pprint
-#from helpers.kafka import kafka
+
+from flask import render_template
+from app.models import Installation
 
 
-def handleGithubAppPost(db, request):
+def handleGithubAppPost(db, request, payload_queue):
     print("in handleGithubAppPost ...")
     message_id = request.headers.get('X-GitHub-Delivery')
-    post_data = request.data
-    payload = json.loads(post_data)
-    #kafka_producer = kafka()
+    payload = json.loads(request.data)
     if "pull_request" in payload:
-        pprint(payload)
-        #kafka_producer.produce(post_data)
+        envelope = {'message-id': message_id,
+                    'timestamp' : TimeStamp.now().asISOString(),
+                    'payload'   : payload}
+        pprint(envelope)
+        payload_queue.put_nowait(json.dumps(envelope).encode())
     print("received a payload via a POST from Github")
     return "received a payload via a POST from Github"
 

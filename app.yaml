@@ -2,13 +2,14 @@ runtime: python37
 
 entrypoint: python main.py
 
-
 handlers:
-  - url: /.*
-    script: auto
+    - url: /.*
+      script: auto
 
 env_variables:
     HOOK_SECRET_KEY: Bruichladdich
-    DATABASE_URL:  "postgresql://postgres:postgres@/installs?host=/cloudsql/saas-rally-dev:us-west2:gorgon-dev"
+    #DATABASE_URL:          "postgresql://pairing:pairing@localhost:5432/installs"
+    LOCAL_DATABASE_URL:     "postgresql://pairing:pairing@localhost:5432/installs"
+    CLOUDSQL_DATABASE_URL:  "postgresql://postgres:postgres@/installs?host=/cloudsql/saas-rally-dev:us-west2:gorgon-dev"
     PYTHONUNBUFFERED: 1
     DARK_STAR_WOMBAT: "guano-provider"
