@@ -1,0 +1,8 @@
+runtime: python37
+
+entrypoint: python parse.py
+
+env_variables:
+    LOCAL_DATABASE_URL:     "postgresql://pairing:pairing@localhost:5432/installs"
+    CLOUDSQL_DATABASE_URL:  "postgresql://postgres:postgres@/installs?host=/cloudsql/saas-rally-dev:us-west2:gorgon-dev"
+    PYTHONUNBUFFERED: 1
