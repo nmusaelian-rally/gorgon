@@ -1,6 +1,7 @@
 runtime: python37
 
 entrypoint: python parse.py
+service: parse
 
 env_variables:
     LOCAL_DATABASE_URL:     "postgresql://pairing:pairing@localhost:5432/installs"

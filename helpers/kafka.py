@@ -27,3 +27,24 @@ def kafka():
     time.sleep(3)
 
     return kafka_topic.get_producer()
+
+
+def getConsumer(topic_name, consumer_group_name, zookeeper, kafka_brokers):
+    client = KafkaClient(hosts=kafka_brokers)
+    topic  = client.topics[b'%s' % topic_name]
+    try:
+        consumer = topic.get_balanced_consumer(consumer_group=consumer_group_name.encode(),
+                                           reset_offset_on_start=False,
+                                           auto_commit_enable=True,
+                                           zookeeper_connect=zookeeper)
+    except Exception as ex:
+        print(ex)
+        raise
+
+    return consumer
+
+
+def getProducer(dest_topic, zookeeper, kafka_brokers):
+    client = KafkaClient(hosts=kafka_brokers)
+    topic = client.topics[b'%s' % dest_topic.encode()]
+    producer = topic.get_producer()
