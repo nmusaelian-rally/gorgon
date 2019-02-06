@@ -1,7 +1,7 @@
 
 import os
 from app.app import app,db
-from flask import Flask, request, render_template
+from flask import request
 
 from handlers.gh_handler  import handleGithubAppPost
 from helpers.signature    import validateGithubSignature

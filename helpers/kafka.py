@@ -11,6 +11,7 @@ def read_config(config_path):
 
 def kafka():
     config = read_config('helpers/kafka_config.yml')
+
     kafka_home = config.get('KafkaHome')
     topic_name = config.get('TopicName')
     hosts = config.get('Hosts', 'localhost:9092')
