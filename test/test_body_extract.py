@@ -27,19 +27,27 @@ https://rally1.rallydev.com/#/userstory/233beta9 but his old sick cow named 1234
 sold his cow and got drunk
 """
 
+big_nothing = ""
+
+
 def test_extract_single_ref():
     links = _extractLinkFromBody(single_ref_body)
     assert len(links) == 1
-    assert 'rally1.rallydev.com/#detail/userstory/233' in links[0]
+    assert 'rally1.rallydev.com/#detail/userstory/233' in links[0][0]
 
 
 def test_extract_multiple_ref():
     links = _extractLinkFromBody(multi_ref_body)
     assert len(links) == 2
+    assert 'rally1.rallydev.com/#detail/portfolioitem/feature/253' in links[1][0]
 
 def test_extract_no_ref():
     links = _extractLinkFromBody(no_ref_body)
     assert len(links) == 0
+
+def test_no_body():
+    nothing = _extractLinkFromBody(big_nothing)
+    assert len(nothing) == 0
 
 def test_getArtUrls():
     short_refs = _getRallyArtifactUrls(single_ref_body)
@@ -49,7 +57,7 @@ def test_getArtUrls():
     api_key = result[1]
     art_refs = _getRallyArtifactRefs(short_refs, api_key)
     assert len(art_refs) == 1
-    assert "hierarchicalrequirement/233499351572" in art_refs[0]
+    assert "hierarchicalrequirement/233499351572" in art_refs[0]['ref']
 
 def test_getArtUrlsWithMultipleRefs():
     short_refs = _getRallyArtifactUrls(multi_ref_body)
@@ -59,5 +67,7 @@ def test_getArtUrlsWithMultipleRefs():
     api_key = result[1]
     art_refs = _getRallyArtifactRefs(short_refs, api_key)
     assert len(art_refs) == 2
-    assert "hierarchicalrequirement/233499351572" in art_refs[0]
-    assert "portfolioitem/feature/253303082732"   in art_refs[1]
+    assert "hierarchicalrequirement/233499351572" in art_refs[0]['ref']
+    assert "portfolioitem/feature/253303082732"   in art_refs[1]['ref']
+    assert "/slm/webservice/v2.0/workspace/" in art_refs[0]['workspace']
+    assert "/slm/webservice/v2.0/project/"   in art_refs[1]['project']

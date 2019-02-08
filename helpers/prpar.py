@@ -5,7 +5,7 @@ from helpers.dbconn import update
 
 BASE_RALLY_URL = 'https://rally1.rallydev.com/slm/webservice/v2.0'
 
-def parseAndDump(consumer, producer, db):
+def parseAndDump(consumer, producer, dbconnection):
     # iterate over consumer, pulling out payload items
     for message in consumer:
         md = json.loads(message.value.decode())
@@ -13,7 +13,8 @@ def parseAndDump(consumer, producer, db):
         installation_id = md['payload']['installation']['id']
         # query for item in db, update the hit_count and last_used fields for installation_id
         # update(db, installation_id)
-        api_key = update(db, installation_id)
+        api_key = update(dbconnection, installation_id)
+        #dbconnection.commit()
         # yank out all the cruft from payload, reducing it to a dict of field/values suitable for create/update via Rally WSAPI
         pr_info = md['payload']['pull_request']
         actionable_items = _assembleRallyItems(pr_info, api_key)
@@ -28,12 +29,15 @@ def _assembleRallyItems(item_data, api_key):
     artifact_refs = _getRallyArtifactRefs(short_refs, api_key)
     items = []
     for art_ref in artifact_refs:
-        item = {'ExternalID'          : item_data['id'],
-                'ExternalFormattedId' : item_data['number'],
-                'Name'                : item_data['title'],
-                'Artifact'            : art_ref,
-                'Url'                 : item_data['url']
-                }
+        rally_payload = {'ExternalID'          : item_data['id'],
+                         'ExternalFormattedId' : item_data['number'],
+                         'Name'                : item_data['title'],
+                         'Artifact'            : art_ref['ref'],
+                         'Url'                 : item_data['url']
+                        }
+        item = {'workspace'     : art_ref['workspace'],
+                'project'       : art_ref['project'],
+                'rally_payload' : rally_payload}
         items.append(item)
     return items
 
@@ -68,9 +72,15 @@ def _getRallyArtifactRefs(short_refs, api_key):
         r = requests.get(full_url, headers=headers)
         if r.status_code == 200:
             rally_response = json.loads(r.text)
-            keys = [k.lower() for k in rally_response.keys()]
-            if wi_type in keys:
-                art_refs.append(short_ref)
+            big_key = list(rally_response.keys())[0]
+            rally_response[big_key.lower()] = rally_response[big_key]  # "dupe" a slot with the lower case translation of the big_key
+            if wi_type in rally_response:
+                # art_refs.append(short_ref)
+                workspace = rally_response[wi_type]['Workspace']['_ref']
+                project   = rally_response[wi_type]['Project'  ]['_ref']
+                art_refs.append({'ref'      : short_ref,
+                                 'workspace': workspace,
+                                 'project'  : project})
 
     return art_refs
 
