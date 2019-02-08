@@ -1,0 +1,15 @@
+runtime: python37
+
+service: foo
+entrypoint: python foo.py
+automatic_scaling:
+    min_instances: 1
+
+handlers:
+# The root URL (/) is handled by the WSGI application named
+# "app" in home.py. No other URLs match this pattern.
+- url: /bogus
+  script: auto
+
+env_variables:
+    PYTHONUNBUFFERED: 1
