@@ -7,9 +7,9 @@ handlers:
       script: auto
 
 env_variables:
-    HOOK_SECRET_KEY: Bruichladdich
-    #DATABASE_URL:          "postgresql://pairing:pairing@localhost:5432/installs"
-    LOCAL_DATABASE_URL:     "postgresql://pairing:pairing@localhost:5432/installs"
-    CLOUDSQL_DATABASE_URL:  "postgresql://postgres:postgres@/installs?host=/cloudsql/saas-rally-dev:us-west2:gorgon-dev"
-    PYTHONUNBUFFERED: 1
-    DARK_STAR_WOMBAT: "guano-provider"
+    HOOK_SECRET_KEY      : Bruichladdich
+    LOCAL_DATABASE_URL   : "postgresql://pairing:pairing@localhost:5432/installs"
+    CLOUDSQL_DATABASE_URL: "postgresql://postgres:postgres@/installs?host=/cloudsql/saas-rally-dev:us-west2:gorgon-dev"
+    PYTHONUNBUFFERED     : 1
+    DARK_STAR_WOMBAT     : "guano-provider"  # Flask related requirement to be able to write to backend elements
+    #PORT                : 4444    # you can enable this for local machine testing, but not valid for GCP deploy

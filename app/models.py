@@ -20,7 +20,6 @@ class Installation(db.Model):
         self.install_id = install_id
         self.sub_id     = sub_id
         self.api_key    = api_key
-        #self.created_date = datetime.date.today().strftime("%Y-%m-%d")
         self.created_date = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
 
     def __repr__(self):

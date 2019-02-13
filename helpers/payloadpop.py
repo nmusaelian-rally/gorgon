@@ -1,15 +1,19 @@
 import time
 import queue
 
-from helpers.kafka import kafka
+from helpers.kafka import getProducer
 
+
+KAFKA_PAYLOAD_TOPIC  = 'ghooks'
+ZOOKEEPER     = 'localhost:2181'
+KAFKA_BROKERS = "localhost:9092,localhost:9003"
 
 class PayloadPopulator:
 
     STOP_TOKEN = "HALT - No more work 4U"
     def __init__(self, topic_name, items):
         self.items = items # this is a queue.Queue instance
-        self.kafka_producer = kafka()
+        self.kafka_producer = getProducer(KAFKA_PAYLOAD_TOPIC, ZOOKEEPER, KAFKA_BROKERS)
 
     def work(self):
 

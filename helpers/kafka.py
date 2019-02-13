@@ -3,11 +3,11 @@ import time
 import yaml
 from pykafka import KafkaClient
 
-def read_config(config_path):
-    with open(config_path, 'r') as cf:
-        content = cf.read()
-        conf = yaml.load(content)
-    return conf
+# def read_config(config_path):
+#     with open(config_path, 'r') as cf:
+#         content = cf.read()
+#         conf = yaml.load(content)
+#     return conf
 
 # def kafka():
 #     config     = read_config('helpers/kafka_config.yml')
@@ -35,8 +35,8 @@ def getConsumer(topic_name, consumer_group_name, zookeeper, kafka_brokers):
 
     try:
         consumer = topic.get_balanced_consumer(consumer_group=consumer_group_name.encode(),
-                                               #reset_offset_on_start=False,
-                                               reset_offset_on_start=True,
+                                               reset_offset_on_start=False,
+                                               #reset_offset_on_start=True,
                                                auto_commit_enable=True,
                                                zookeeper_connect=zookeeper)
     except Exception as ex:
@@ -44,8 +44,8 @@ def getConsumer(topic_name, consumer_group_name, zookeeper, kafka_brokers):
         raise
 
     ## reset the offset to start at to the value x
-    partition = topic.partitions[0]
-    consumer.reset_offsets([(partition, 1)])
+    # partition = topic.partitions[0]
+    # consumer.reset_offsets([(partition, 1)])
     ##
 
     return consumer

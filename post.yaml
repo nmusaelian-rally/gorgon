@@ -1,0 +1,8 @@
+runtime: python37
+
+entrypoint: python post.py
+service: post
+
+env_variables:
+    PYTHONUNBUFFERED: 1
+    PORT            : 6001

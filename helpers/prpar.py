@@ -6,37 +6,39 @@ from helpers.dbconn import update
 BASE_RALLY_URL = 'https://rally1.rallydev.com/slm/webservice/v2.0'
 
 def parseAndDump(consumer, producer, dbconnection):
-    # iterate over consumer, pulling out payload items
-    for message in consumer:
+    for message in consumer: # iterate over consumer, pulling out payload items
         md = json.loads(message.value.decode())
         # yank out the installation_id from the message dict (md)
         installation_id = md['payload']['installation']['id']
         # query for item in db, update the hit_count and last_used fields for installation_id
-        # update(db, installation_id)
         api_key = update(dbconnection, installation_id)
-        #dbconnection.commit()
         # yank out all the cruft from payload, reducing it to a dict of field/values suitable for create/update via Rally WSAPI
+        if md['payload']['action'] != 'opened':
+            continue
         pr_info = md['payload']['pull_request']
         actionable_items = _assembleRallyItems(pr_info, api_key)
         # dump the resulting payload chunk into the next topic via the producer
         for actionable_item in actionable_items:
             producer.produce(json.dumps(actionable_item).encode())
 
-    # consumer.stop()  # we may have to do this as part of a graceful shutdown process (which we don't know how if works...)
+    # consumer.stop()  # we may have to do this as part of a graceful shutdown process (which we don't know how to do...)
+
 
 def _assembleRallyItems(item_data, api_key):
     short_refs    = _getRallyArtifactUrls(item_data['body'])
     artifact_refs = _getRallyArtifactRefs(short_refs, api_key)
     items = []
     for art_ref in artifact_refs:
-        rally_payload = {'ExternalID'          : item_data['id'],
-                         'ExternalFormattedId' : item_data['number'],
-                         'Name'                : item_data['title'],
-                         'Artifact'            : art_ref['ref'],
-                         'Url'                 : item_data['url']
-                        }
+        rally_payload = {'PullRequest':
+                            {'ExternalID'          : item_data['id'],
+                             'ExternalFormattedId' : item_data['number'],
+                             'Name'                : item_data['title'],
+                             'Artifact'            : art_ref['ref'],
+                             'Url'                 : item_data['url']
+                         }}
         item = {'workspace'     : art_ref['workspace'],
                 'project'       : art_ref['project'],
+                'api_key'       : api_key,
                 'rally_payload' : rally_payload}
         items.append(item)
     return items
