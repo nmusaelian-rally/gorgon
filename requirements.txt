@@ -23,7 +23,7 @@ pyral==1.4.2
 pytest==4.1.1
 python-dateutil==2.7.5
 python-editor==1.0.3
-PyYAML==3.13
+PyYAML==5.4
 requests==2.21.0
 six==1.12.0
 SQLAlchemy==1.2.16
